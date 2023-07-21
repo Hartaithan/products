@@ -1,22 +1,12 @@
 import type { FC } from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import Navigation from './src/navigation';
 
 const App: FC = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View style={styles.container}>
-        <Text>Hello World!</Text>
-      </View>
+      <StatusBar barStyle="light-content" />
+      <Navigation />
     </SafeAreaView>
   );
 };
@@ -24,8 +14,6 @@ const App: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
