@@ -10,6 +10,7 @@ import global from '../styles/global';
 import { signOut } from '../store/authSlice';
 import { Avatar } from '@rneui/themed';
 import { Button } from '@rneui/base';
+import { getAvatarSource } from '../helpers/upload';
 
 const Profile: FC = () => {
   const { navigate } =
@@ -33,13 +34,7 @@ const Profile: FC = () => {
             rounded
             size={150}
             avatarStyle={styles.avatar}
-            source={
-              profile?.avatar_url
-                ? {
-                    uri: profile.avatar_url,
-                  }
-                : require('../../assets/avatar_placeholder.jpg')
-            }
+            source={getAvatarSource(profile?.avatar_url)}
           />
           <Text tg="text-xl">{`${profile?.name || 'Name'} ${
             profile?.surname || 'Surname'

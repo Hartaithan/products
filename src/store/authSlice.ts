@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IAuthState, IProfile } from '../models/AuthModel';
+import { IAuthState, IProfile, TProfilePayload } from '../models/AuthModel';
 import { supabase } from '../helpers/supabase';
 import {
   Session,
@@ -7,6 +7,7 @@ import {
   SignUpWithPasswordCredentials,
 } from '@supabase/supabase-js';
 import { createTypedAsyncThunk } from '../hooks/useStore';
+import { uploadAvatar } from '../helpers/upload';
 
 const initialState: IAuthState = {
   isAuth: false,
@@ -77,12 +78,20 @@ const getProfile = createTypedAsyncThunk(
 
 const updateProfile = createTypedAsyncThunk(
   'auth/updateProfile',
-  async (payload: Partial<IProfile>, { getState, rejectWithValue }) => {
+  async (payload: TProfilePayload, { getState, rejectWithValue }) => {
     const { auth } = getState();
+    let updated = { ...payload };
     if (!auth.user) return rejectWithValue('User not found!');
+    if (payload.avatar_url && typeof payload.avatar_url !== 'string') {
+      const avatar_url = await uploadAvatar(payload.avatar_url, auth.user.id);
+      updated = {
+        ...updated,
+        avatar_url: avatar_url || updated.avatar_url,
+      };
+    }
     const { data, error } = await supabase
       .from('profiles')
-      .update(payload)
+      .update(updated)
       .eq('id', auth.user.id)
       .select<'*', IProfile | null>('*')
       .single();

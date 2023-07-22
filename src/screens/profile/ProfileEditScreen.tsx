@@ -12,6 +12,7 @@ import { Avatar, Button, Dialog, Icon, Input } from '@rneui/base';
 import ImageCropPicker, {
   PickerErrorCode,
 } from 'react-native-image-crop-picker';
+import { getAvatarSource } from '../../helpers/upload';
 
 const AVATAR_SIZE = 150;
 
@@ -26,6 +27,33 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
   const dispatch = useTypedDispatch();
 
   const [dialog, setDialog] = useState<boolean>(false);
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { isValid },
+  } = useForm<TProfilePayload>({
+    defaultValues: {
+      name: profile?.name || '',
+      surname: profile?.surname || '',
+      avatar_url: profile?.avatar_url || null,
+    },
+  });
+
+  const avatar_url = watch('avatar_url');
+
+  const onSubmit = handleSubmit(data => {
+    dispatch(updateProfile(data))
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch(error => {
+        Alert.alert('Something went wrong', error);
+      });
+  });
 
   const onPickerError = (error: ICropPickerError) => {
     if (error.code === 'E_PICKER_CANCELLED') {
@@ -43,7 +71,7 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
       cropping: true,
     })
       .then(image => {
-        console.info('image', image);
+        setValue('avatar_url', image);
       })
       .catch(error => {
         onPickerError(error);
@@ -60,7 +88,7 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
       cropping: true,
     })
       .then(image => {
-        console.info('image', image);
+        setValue('avatar_url', image);
       })
       .catch(error => {
         onPickerError(error);
@@ -70,42 +98,13 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
       });
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isValid },
-  } = useForm<TProfilePayload>({
-    defaultValues: {
-      name: profile?.name || '',
-      surname: profile?.surname || '',
-      avatar_url: profile?.avatar_url || null,
-    },
-  });
-
-  const onSubmit = handleSubmit(data => {
-    dispatch(updateProfile(data))
-      .unwrap()
-      .then(() => {
-        navigation.goBack();
-      })
-      .catch(error => {
-        Alert.alert('Something went wrong', error);
-      });
-  });
-
   return (
     <View style={[global.container, global.fillCenter]}>
       <TouchableOpacity style={styles.avatar} onPress={() => setDialog(true)}>
         <Avatar
           rounded
           size={AVATAR_SIZE}
-          source={
-            profile?.avatar_url
-              ? {
-                  uri: profile.avatar_url,
-                }
-              : require('../../../assets/avatar_placeholder.jpg')
-          }
+          source={getAvatarSource(avatar_url)}
         />
         <View style={styles.upload}>
           <Icon name="upload" type="material" color={colors.gray[0]} />

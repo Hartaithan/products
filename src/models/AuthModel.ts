@@ -1,4 +1,5 @@
 import { Session, User } from '@supabase/supabase-js';
+import { ImageOrVideo } from 'react-native-image-crop-picker';
 
 export interface IAuthState {
   isAuth: boolean;
@@ -13,7 +14,7 @@ export interface IProfile {
   updated_at: string;
   name: string;
   surname: string;
-  avatar_url: string | null;
+  avatar_url: string | ImageOrVideo | null;
 }
 
 export type TProfilePayload = Omit<IProfile, 'id' | 'updated_at'>;
