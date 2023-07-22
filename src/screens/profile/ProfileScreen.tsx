@@ -6,10 +6,8 @@ import Profile from '../../components/Profile';
 
 const ProfileScreen: FC<IScreenProps> = () => {
   return (
-    <View style={global.container}>
-      <View style={styles.content}>
-        <Profile />
-      </View>
+    <View style={[global.container, styles.content]}>
+      <Profile />
     </View>
   );
 };
