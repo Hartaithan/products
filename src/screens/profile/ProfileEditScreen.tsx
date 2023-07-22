@@ -1,18 +1,74 @@
-import { FC } from 'react';
-import { View, Alert } from 'react-native';
+import { FC, useState } from 'react';
+import { View, Alert, TouchableOpacity } from 'react-native';
 import global from '../../styles/global';
 import { IScreenProps } from '../../models/NavigationModel';
 import { Controller, useForm } from 'react-hook-form';
 import { TProfilePayload } from '../../models/AuthModel';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
 import { updateProfile } from '../../store/authSlice';
-import { Button, Input } from '@rneui/base';
+import { StyleSheet } from 'react-native';
+import { colors } from '../../styles/colors';
+import { Avatar, Button, Dialog, Icon, Input } from '@rneui/base';
+import ImageCropPicker, {
+  PickerErrorCode,
+} from 'react-native-image-crop-picker';
+
+const AVATAR_SIZE = 150;
+
+export interface ICropPickerError {
+  code: PickerErrorCode;
+}
 
 const ProfileEditScreen: FC<IScreenProps> = props => {
   const { navigation } = props;
 
   const { isLoading, profile } = useTypedSelector(state => state.auth);
   const dispatch = useTypedDispatch();
+
+  const [dialog, setDialog] = useState<boolean>(false);
+
+  const onPickerError = (error: ICropPickerError) => {
+    if (error.code === 'E_PICKER_CANCELLED') {
+      console.info('user cancelled crop picker');
+      return;
+    }
+    console.error('image picker error', error);
+    Alert.alert('Something went wrong', 'Unable to upload image');
+  };
+
+  const handleLibrary = () => {
+    ImageCropPicker.openPicker({
+      width: 500,
+      height: 500,
+      cropping: true,
+    })
+      .then(image => {
+        console.info('image', image);
+      })
+      .catch(error => {
+        onPickerError(error);
+      })
+      .finally(() => {
+        setDialog(false);
+      });
+  };
+
+  const handleCamera = () => {
+    ImageCropPicker.openCamera({
+      width: 500,
+      height: 500,
+      cropping: true,
+    })
+      .then(image => {
+        console.info('image', image);
+      })
+      .catch(error => {
+        onPickerError(error);
+      })
+      .finally(() => {
+        setDialog(false);
+      });
+  };
 
   const {
     control,
@@ -39,6 +95,22 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
 
   return (
     <View style={[global.container, global.fillCenter]}>
+      <TouchableOpacity style={styles.avatar} onPress={() => setDialog(true)}>
+        <Avatar
+          rounded
+          size={AVATAR_SIZE}
+          source={
+            profile?.avatar_url
+              ? {
+                  uri: profile.avatar_url,
+                }
+              : require('../../../assets/avatar_placeholder.jpg')
+          }
+        />
+        <View style={styles.upload}>
+          <Icon name="upload" type="material" color={colors.gray[0]} />
+        </View>
+      </TouchableOpacity>
       <Controller
         control={control}
         name="name"
@@ -83,8 +155,42 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
         loading={isLoading}
         onPress={() => onSubmit()}
       />
+      <Dialog
+        isVisible={dialog}
+        overlayStyle={styles.dialog}
+        onBackdropPress={() => setDialog(false)}>
+        <Dialog.Title title="Upload" />
+        <Dialog.Actions>
+          <Dialog.Button title="Library" onPress={() => handleLibrary()} />
+          <Dialog.Button title="Camera" onPress={() => handleCamera()} />
+        </Dialog.Actions>
+      </Dialog>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  avatar: {
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    borderRadius: AVATAR_SIZE / 2,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  upload: {
+    height: 30,
+    width: '100%',
+    backgroundColor: colors.dark[9] + '80',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dialog: {
+    backgroundColor: 'white',
+  },
+});
 
 export default ProfileEditScreen;
