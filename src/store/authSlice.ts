@@ -66,6 +66,14 @@ const signIn = createAsyncThunk(
   },
 );
 
+const signOut = createAsyncThunk(
+  'auth/signOut',
+  async (_, { rejectWithValue }) => {
+    const { error } = await supabase.auth.signOut();
+    if (error) return rejectWithValue(error.message);
+  },
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -97,6 +105,9 @@ export const authSlice = createSlice({
       state.profile = action.payload.profile;
     });
     builder.addCase(signIn.rejected, () => initialState);
+    builder.addCase(signOut.pending, state => state);
+    builder.addCase(signOut.fulfilled, () => initialState);
+    builder.addCase(signOut.rejected, state => state);
     builder.addCase(getProfile.pending, state => {
       state.isLoading = true;
     });
@@ -112,6 +123,6 @@ export const authSlice = createSlice({
 });
 
 export const { updateSession } = authSlice.actions;
-export { signIn, signUp, getProfile };
+export { signIn, signUp, signOut, getProfile };
 
 export default authSlice.reducer;
