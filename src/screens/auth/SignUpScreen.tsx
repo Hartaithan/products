@@ -97,8 +97,8 @@ const SignUpScreen: FC<IScreenProps> = props => {
         loading={isLoading}
         onPress={() => onSubmit()}
       />
-      <Text tg="text-xs" c="gray" cs={6} style={styles.signIn}>
-        Already have account?{' '}
+      <Text tg="text-xs" c="gray" cs={6} style={styles.message}>
+        Already have account?&nbsp;
         <Text
           tg="text-xs"
           c="blue"
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signIn: {
+  message: {
     marginTop: spacing[5],
   },
 });
