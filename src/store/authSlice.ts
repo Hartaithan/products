@@ -1,7 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { IAuthState, IProfile } from '../models/AuthModel';
 import { supabase } from '../helpers/supabase';
 import {
+  Session,
   SignInWithPasswordCredentials,
   SignUpWithPasswordCredentials,
 } from '@supabase/supabase-js';
@@ -13,6 +14,25 @@ const initialState: IAuthState = {
   session: null,
   profile: null,
 };
+
+const getProfile = createAsyncThunk(
+  'auth/getProfile',
+  async (_, { rejectWithValue }) => {
+    const [session, user] = await Promise.all([
+      supabase.auth.getSession(),
+      supabase.auth.getUser(),
+    ]);
+    if (session.error) return rejectWithValue(session.error.message);
+    if (user.error) return rejectWithValue(user.error.message);
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select<'*', IProfile | null>('*')
+      .eq('id', user.data.user.id)
+      .single();
+    if (profileError) return rejectWithValue(profileError.message);
+    return { ...session.data, ...user.data, profile: profileData };
+  },
+);
 
 const signUp = createAsyncThunk(
   'auth/signUp',
@@ -49,7 +69,11 @@ const signIn = createAsyncThunk(
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    updateSession: (state, action: PayloadAction<Session | null>) => {
+      state.session = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(signUp.pending, state => {
       state.isLoading = true;
@@ -73,10 +97,21 @@ export const authSlice = createSlice({
       state.profile = action.payload.profile;
     });
     builder.addCase(signIn.rejected, () => initialState);
+    builder.addCase(getProfile.pending, state => {
+      state.isLoading = true;
+    });
+    builder.addCase(getProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isAuth = true;
+      state.user = action.payload.user;
+      state.session = action.payload.session;
+      state.profile = action.payload.profile;
+    });
+    builder.addCase(getProfile.rejected, () => initialState);
   },
 });
 
-export const actions = authSlice.actions;
-export { signIn, signUp };
+export const { updateSession } = authSlice.actions;
+export { signIn, signUp, getProfile };
 
 export default authSlice.reducer;
