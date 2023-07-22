@@ -13,5 +13,7 @@ export interface IProfile {
   updated_at: string;
   name: string;
   surname: string;
-  avatar_url: string;
+  avatar_url: string | null;
 }
+
+export type TProfilePayload = Omit<IProfile, 'id' | 'updated_at'>;

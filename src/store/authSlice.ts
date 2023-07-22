@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IAuthState, IProfile } from '../models/AuthModel';
 import { supabase } from '../helpers/supabase';
 import {
@@ -6,6 +6,7 @@ import {
   SignInWithPasswordCredentials,
   SignUpWithPasswordCredentials,
 } from '@supabase/supabase-js';
+import { createTypedAsyncThunk } from '../hooks/useStore';
 
 const initialState: IAuthState = {
   isAuth: false,
@@ -15,7 +16,47 @@ const initialState: IAuthState = {
   profile: null,
 };
 
-const getProfile = createAsyncThunk(
+const signUp = createTypedAsyncThunk(
+  'auth/signUp',
+  async (payload: SignUpWithPasswordCredentials, { rejectWithValue }) => {
+    const { data, error } = await supabase.auth.signUp(payload);
+    if (error) return rejectWithValue(error.message);
+    if (!data.user) return rejectWithValue('User not found!');
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select<'*', IProfile | null>('*')
+      .eq('id', data?.user.id)
+      .single();
+    if (profileError) return rejectWithValue(profileError.message);
+    return { ...data, profile: profileData };
+  },
+);
+
+const signIn = createTypedAsyncThunk(
+  'auth/signIn',
+  async (payload: SignInWithPasswordCredentials, { rejectWithValue }) => {
+    const { data, error } = await supabase.auth.signInWithPassword(payload);
+    if (error) return rejectWithValue(error.message);
+    if (!data.user) return rejectWithValue('User not found!');
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select<'*', IProfile | null>('*')
+      .eq('id', data?.user.id)
+      .single();
+    if (profileError) return rejectWithValue(profileError.message);
+    return { ...data, profile: profileData };
+  },
+);
+
+const signOut = createTypedAsyncThunk(
+  'auth/signOut',
+  async (_, { rejectWithValue }) => {
+    const { error } = await supabase.auth.signOut();
+    if (error) return rejectWithValue(error.message);
+  },
+);
+
+const getProfile = createTypedAsyncThunk(
   'auth/getProfile',
   async (_, { rejectWithValue }) => {
     const [session, user] = await Promise.all([
@@ -34,43 +75,19 @@ const getProfile = createAsyncThunk(
   },
 );
 
-const signUp = createAsyncThunk(
-  'auth/signUp',
-  async (payload: SignUpWithPasswordCredentials, { rejectWithValue }) => {
-    const { data, error } = await supabase.auth.signUp(payload);
-    if (error) return rejectWithValue(error.message);
-    if (!data.user) return rejectWithValue('User not found!');
-    const { data: profileData, error: profileError } = await supabase
+const updateProfile = createTypedAsyncThunk(
+  'auth/updateProfile',
+  async (payload: Partial<IProfile>, { getState, rejectWithValue }) => {
+    const { auth } = getState();
+    if (!auth.user) return rejectWithValue('User not found!');
+    const { data, error } = await supabase
       .from('profiles')
+      .update(payload)
+      .eq('id', auth.user.id)
       .select<'*', IProfile | null>('*')
-      .eq('id', data?.user.id)
       .single();
-    if (profileError) return rejectWithValue(profileError.message);
-    return { ...data, profile: profileData };
-  },
-);
-
-const signIn = createAsyncThunk(
-  'auth/signIn',
-  async (payload: SignInWithPasswordCredentials, { rejectWithValue }) => {
-    const { data, error } = await supabase.auth.signInWithPassword(payload);
     if (error) return rejectWithValue(error.message);
-    if (!data.user) return rejectWithValue('User not found!');
-    const { data: profileData, error: profileError } = await supabase
-      .from('profiles')
-      .select<'*', IProfile | null>('*')
-      .eq('id', data?.user.id)
-      .single();
-    if (profileError) return rejectWithValue(profileError.message);
-    return { ...data, profile: profileData };
-  },
-);
-
-const signOut = createAsyncThunk(
-  'auth/signOut',
-  async (_, { rejectWithValue }) => {
-    const { error } = await supabase.auth.signOut();
-    if (error) return rejectWithValue(error.message);
+    return { profile: data };
   },
 );
 
@@ -83,6 +100,7 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // SIGN UP
     builder.addCase(signUp.pending, state => {
       state.isLoading = true;
     });
@@ -94,6 +112,7 @@ export const authSlice = createSlice({
       state.profile = action.payload.profile;
     });
     builder.addCase(signUp.rejected, () => initialState);
+    // SIGN IN
     builder.addCase(signIn.pending, state => {
       state.isLoading = true;
     });
@@ -105,9 +124,11 @@ export const authSlice = createSlice({
       state.profile = action.payload.profile;
     });
     builder.addCase(signIn.rejected, () => initialState);
+    // SIGN OUT
     builder.addCase(signOut.pending, state => state);
     builder.addCase(signOut.fulfilled, () => initialState);
     builder.addCase(signOut.rejected, state => state);
+    // GET PROFILE
     builder.addCase(getProfile.pending, state => {
       state.isLoading = true;
     });
@@ -119,10 +140,19 @@ export const authSlice = createSlice({
       state.profile = action.payload.profile;
     });
     builder.addCase(getProfile.rejected, () => initialState);
+    // UPDATE PROFILE
+    builder.addCase(updateProfile.pending, state => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.profile = action.payload.profile;
+    });
+    builder.addCase(updateProfile.rejected, state => state);
   },
 });
 
 export const { updateSession } = authSlice.actions;
-export { signIn, signUp, signOut, getProfile };
+export { signIn, signUp, signOut, getProfile, updateProfile };
 
 export default authSlice.reducer;
