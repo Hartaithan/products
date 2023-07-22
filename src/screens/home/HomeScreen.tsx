@@ -1,9 +1,10 @@
 import { FC } from 'react';
-import { Text, View, Button } from 'react-native';
+import { View, Button } from 'react-native';
 import global from '../../styles/global';
 import { IScreenProps, SCREENS } from '../../models/NavigationModel';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
 import { signUp } from '../../store/authSlice';
+import Text from '../../components/Text';
 
 const HomeScreen: FC<IScreenProps> = props => {
   const { navigation } = props;
@@ -12,8 +13,10 @@ const HomeScreen: FC<IScreenProps> = props => {
 
   return (
     <View style={global.container}>
-      <Text>Home Screen</Text>
-      <Text>{JSON.stringify(auth, null, 2)}</Text>
+      <Text tg="text-lg">ABCDEFGHIJKLMNOPQRSTUVWXYZ</Text>
+      <Text tg="text-lg">abcdefghijklmnopqrstuvwxyz</Text>
+      <Text tg="text-lg">0123456789 !@#$%^&*()</Text>
+      <Text tg="text-lg">{JSON.stringify(auth, null, 2)}</Text>
       <Button
         title="SignUp"
         onPress={() =>
