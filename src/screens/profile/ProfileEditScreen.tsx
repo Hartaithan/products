@@ -5,8 +5,8 @@ import { IScreenProps } from '../../models/NavigationModel';
 import { Controller, useForm } from 'react-hook-form';
 import { TProfilePayload } from '../../models/AuthModel';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
-import { Button, Input } from 'react-native-elements';
 import { updateProfile } from '../../store/authSlice';
+import { Button, Input } from '@rneui/base';
 
 const ProfileEditScreen: FC<IScreenProps> = props => {
   const { navigation } = props;

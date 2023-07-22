@@ -1,7 +1,6 @@
 import { StyleSheet, View, Alert } from 'react-native';
 import { FC } from 'react';
 import { useTypedDispatch, useTypedSelector } from '../hooks/useStore';
-import { Avatar, Button } from 'react-native-elements';
 import { spacing } from '../styles/spacing';
 import Text from './Text';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
@@ -9,6 +8,8 @@ import { SCREENS } from '../models/NavigationModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import global from '../styles/global';
 import { signOut } from '../store/authSlice';
+import { Avatar } from '@rneui/themed';
+import { Button } from '@rneui/base';
 
 const Profile: FC = () => {
   const { navigate } =

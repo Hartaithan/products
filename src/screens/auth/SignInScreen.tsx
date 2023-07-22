@@ -6,9 +6,9 @@ import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
 import { Controller, useForm } from 'react-hook-form';
 import { SignInWithPasswordCredentials } from '@supabase/supabase-js';
 import { signIn } from '../../store/authSlice';
-import { Button, Input } from 'react-native-elements';
 import Text from '../../components/Text';
 import { spacing } from '../../styles/spacing';
+import { Button, Input } from '@rneui/base';
 
 const SignInScreen: FC<IScreenProps> = props => {
   const { navigation } = props;

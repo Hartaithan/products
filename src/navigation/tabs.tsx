@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { TABS } from '../models/NavigationModel';
 import HomeNavigation from './home';
 import ProfileNavigation from './profile';
-import { Icon } from 'react-native-elements';
+import { Icon } from '@rneui/base';
 
 const Tab = createBottomTabNavigator();
 

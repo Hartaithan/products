@@ -3,12 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import global from '../../styles/global';
 import { IScreenProps, SCREENS } from '../../models/NavigationModel';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Input } from 'react-native-elements';
 import { SignUpWithPasswordCredentials } from '@supabase/supabase-js';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
 import { signUp } from '../../store/authSlice';
 import Text from '../../components/Text';
 import { spacing } from '../../styles/spacing';
+import { Button, Input } from '@rneui/base';
 
 const SignUpScreen: FC<IScreenProps> = props => {
   const { navigation } = props;
