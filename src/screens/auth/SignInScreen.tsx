@@ -40,7 +40,7 @@ const SignInScreen: FC<IScreenProps> = props => {
   });
 
   return (
-    <View style={[global.container, styles.content]}>
+    <View style={[global.container, global.fillCenter]}>
       <Controller
         control={control}
         name="email"
@@ -111,11 +111,6 @@ const SignInScreen: FC<IScreenProps> = props => {
 };
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   message: {
     marginTop: spacing[5],
   },

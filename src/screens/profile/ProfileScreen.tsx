@@ -1,23 +1,15 @@
 import { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import global from '../../styles/global';
 import { IScreenProps } from '../../models/NavigationModel';
 import Profile from '../../components/Profile';
 
 const ProfileScreen: FC<IScreenProps> = () => {
   return (
-    <View style={[global.container, styles.content]}>
+    <View style={[global.container, global.fillCenter]}>
       <Profile />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default ProfileScreen;

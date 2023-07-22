@@ -7,6 +7,7 @@ import Text from './Text';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { SCREENS } from '../models/NavigationModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import global from '../styles/global';
 
 const Profile: FC = () => {
   const { navigate } =
@@ -14,7 +15,7 @@ const Profile: FC = () => {
   const { isAuth, profile } = useTypedSelector(state => state.auth);
 
   return (
-    <View style={styles.container}>
+    <View style={global.fillCenter}>
       {isAuth && (
         <>
           <Avatar
@@ -54,11 +55,6 @@ const Profile: FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   avatar: {
     marginBottom: spacing[4],
   },
