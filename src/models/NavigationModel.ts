@@ -2,6 +2,7 @@ import { ParamListBase, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export enum SCREENS {
+  Root = 'RootScreen',
   // HOME
   Home = 'HomeScreen',
   // AUTH
@@ -13,6 +14,11 @@ export enum SCREENS {
   // PRODUCTS
   Product = 'ProductScreen',
   Cart = 'CartScreen',
+}
+
+export enum TABS {
+  Home = 'HomeTab',
+  Profile = 'ProfileTab',
 }
 
 export interface IScreenProps {
