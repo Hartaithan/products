@@ -18,7 +18,6 @@ const CategoryTabs: FC<ICategoryTabsProps> = props => {
     <FlatList
       horizontal
       data={categories}
-      style={styles.container}
       contentContainerStyle={styles.list}
       showsHorizontalScrollIndicator={false}
       renderItem={({ item }) => {
@@ -45,7 +44,6 @@ const CategoryTabs: FC<ICategoryTabsProps> = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
   list: {
     padding: spacing[5],
     alignItems: 'center',

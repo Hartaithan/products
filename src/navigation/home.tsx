@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS } from '../models/NavigationModel';
 import HomeScreen from '../screens/home/HomeScreen';
-import SearchAction from '../components/SearchAction';
+import SearchAction from '../components/HeaderActions';
 
 const HomeStack = createNativeStackNavigator();
 

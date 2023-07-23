@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS } from '../models/NavigationModel';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import ProfileEditScreen from '../screens/profile/ProfileEditScreen';
-import SearchAction from '../components/SearchAction';
+import SearchAction from '../components/HeaderActions';
 
 const ProfileStack = createNativeStackNavigator();
 
