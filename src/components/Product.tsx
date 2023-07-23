@@ -5,6 +5,8 @@ import { Button, Skeleton } from '@rneui/themed';
 import { spacing } from '../styles/spacing';
 import { colors } from '../styles/colors';
 import Text from './Text';
+import { useDispatch } from 'react-redux';
+import { addCartItem } from '../store/cartSlice';
 
 type QuantityType = 'add' | 'remove';
 
@@ -14,6 +16,7 @@ interface IProductsProps {
 
 const Product: FC<IProductsProps> = props => {
   const { product } = props;
+  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState<number>(1);
 
   const handleQuantity = (type: QuantityType) => {
@@ -74,7 +77,11 @@ const Product: FC<IProductsProps> = props => {
             buttonStyle={styles.multiplier}
           />
         </View>
-        <Button title="Add to cart" buttonStyle={styles.cart} />
+        <Button
+          title="Add to cart"
+          buttonStyle={styles.cart}
+          onPress={() => dispatch(addCartItem({ item: product, quantity }))}
+        />
       </View>
       <Button title="Details" buttonStyle={styles.details} />
     </View>
