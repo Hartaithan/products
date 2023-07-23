@@ -6,6 +6,9 @@ const global = StyleSheet.create({
     flex: 1,
     padding: spacing[5],
   },
+  spacing: {
+    padding: spacing[5],
+  },
   fill: {
     flex: 1,
   },

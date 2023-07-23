@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { View, Button } from 'react-native';
+import { Button, ScrollView } from 'react-native';
 import global from '../../styles/global';
 import { IScreenProps, SCREENS } from '../../models/NavigationModel';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
@@ -12,11 +12,8 @@ const HomeScreen: FC<IScreenProps> = props => {
   const dispatch = useTypedDispatch();
 
   return (
-    <View style={global.container}>
-      <Text tg="text-lg">ABCDEFGHIJKLMNOPQRSTUVWXYZ</Text>
-      <Text tg="text-lg">abcdefghijklmnopqrstuvwxyz</Text>
-      <Text tg="text-lg">0123456789 !@#$%^&*()</Text>
-      <Text tg="text-lg">{JSON.stringify(auth, null, 2)}</Text>
+    <ScrollView style={global.fill} contentContainerStyle={global.spacing}>
+      <Text tg="text-xs">{JSON.stringify(auth, null, 2)}</Text>
       <Button
         title="SignUp"
         onPress={() =>
@@ -29,7 +26,7 @@ const HomeScreen: FC<IScreenProps> = props => {
         title="Go to Profile"
         onPress={() => navigation.navigate(SCREENS.Profile)}
       />
-    </View>
+    </ScrollView>
   );
 };
 
