@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
-import global from '../../styles/global';
 import { IScreenProps } from '../../models/NavigationModel';
 import { IProduct } from '../../models/ProductModel';
 import { LoadingStatus } from '../../models/AppModel';
@@ -10,6 +9,7 @@ import { spacing } from '../../styles/spacing';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { Icon, Input } from '@rneui/themed';
 import Separator from '../../components/Separator';
+import Text from '../../components/Text';
 
 const loaders: number[] = Array.from(Array(4).keys());
 
@@ -42,7 +42,7 @@ const SearchScreen: FC<IScreenProps> = () => {
   }, [getProducts]);
 
   return (
-    <View style={global.fill}>
+    <View>
       <View style={styles.search}>
         <Input
           placeholder="Search..."
@@ -63,6 +63,11 @@ const SearchScreen: FC<IScreenProps> = () => {
         keyExtractor={item =>
           typeof item === 'number' ? item.toString() : item.id.toString()
         }
+        ListEmptyComponent={() => (
+          <Text tg="text-lg" align="center">
+            Nothing found :(
+          </Text>
+        )}
       />
     </View>
   );

@@ -1,6 +1,5 @@
 import { FC, useEffect, useState, useCallback } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
-import global from '../../styles/global';
 import { IScreenProps } from '../../models/NavigationModel';
 import API from '../../helpers/api';
 import { IProduct } from '../../models/ProductModel';
@@ -10,6 +9,7 @@ import { spacing } from '../../styles/spacing';
 import { ICategory } from '../../models/CategoryModel';
 import CategoryTabs from '../../components/CategoryTabs';
 import Separator from '../../components/Separator';
+import Text from '../../components/Text';
 
 const loaders: number[] = Array.from(Array(4).keys());
 
@@ -69,7 +69,7 @@ const HomeScreen: FC<IScreenProps> = () => {
   }, [getCategories]);
 
   return (
-    <View style={global.fill}>
+    <View>
       <CategoryTabs
         active={category}
         categories={categories}
@@ -88,6 +88,11 @@ const HomeScreen: FC<IScreenProps> = () => {
         keyExtractor={item =>
           typeof item === 'number' ? item.toString() : item.id.toString()
         }
+        ListEmptyComponent={() => (
+          <Text tg="text-lg" align="center">
+            Nothing found :(
+          </Text>
+        )}
       />
     </View>
   );

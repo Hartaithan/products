@@ -86,6 +86,11 @@ const ProductScreen: FC<IScreenProps> = props => {
           </View>
         </>
       )}
+      {!isLoading && product === null && (
+        <Text tg="text-lg" align="center">
+          Nothing found :(
+        </Text>
+      )}
     </ScrollView>
   );
 };

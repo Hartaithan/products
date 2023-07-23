@@ -1,4 +1,4 @@
-import { Text as RNText, TextProps } from 'react-native';
+import { Text as RNText, TextProps, TextStyle } from 'react-native';
 import { FC } from 'react';
 import { Fonts, Typography, fonts, typography } from '../styles/typography';
 import { Colors, colors } from '../styles/colors';
@@ -13,14 +13,29 @@ interface ITextProps extends TextProps {
   c?: Colors;
   /** color shade [0..9] */
   cs?: Range<0, 9>;
+  align?: TextStyle['textAlign'];
 }
 
 const Text: FC<ITextProps> = props => {
-  const { tg, fw = 400, c = 'gray', cs = 9, style, children, ...rest } = props;
+  const {
+    tg,
+    fw = 400,
+    c = 'gray',
+    cs = 9,
+    align = 'auto',
+    style,
+    children,
+    ...rest
+  } = props;
   return (
     <RNText
       style={[
-        { ...typography[tg], fontFamily: fonts[fw], color: colors[c][cs] },
+        {
+          ...typography[tg],
+          fontFamily: fonts[fw],
+          color: colors[c][cs],
+          textAlign: align,
+        },
         style,
       ]}
       {...rest}>

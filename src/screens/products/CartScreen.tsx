@@ -32,6 +32,11 @@ const CartScreen: FC<IScreenProps> = () => {
         renderItem={({ item }) => <CartItem item={item} />}
         ItemSeparatorComponent={() => <Separator />}
         keyExtractor={({ item }) => item.id.toString()}
+        ListEmptyComponent={() => (
+          <Text tg="text-lg" align="center">
+            Empty cart :(
+          </Text>
+        )}
       />
       {!isAuth && (
         <Text tg="text-lg" c="red" cs={6} style={styles.unauth}>
