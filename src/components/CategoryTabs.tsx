@@ -28,12 +28,12 @@ const CategoryTabs: FC<ICategoryTabsProps> = props => {
             onPress={() => onChange(item)}
             style={{
               ...styles.tab,
-              backgroundColor: isActive ? colors.blue[9] : colors.gray[3],
+              backgroundColor: isActive ? colors.blue[5] : colors.gray[3],
             }}>
             <Text
               tg="text-xs"
               c={isActive ? 'gray' : 'blue'}
-              cs={isActive ? 0 : 9}>
+              cs={isActive ? 0 : 6}>
               {item.label.toUpperCase()}
             </Text>
           </TouchableOpacity>
