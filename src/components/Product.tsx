@@ -52,31 +52,29 @@ const ProductContent: FC<IProductsProps> = props => {
   return (
     <>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
-      <View style={{ ...styles.row, marginTop: spacing[2] }}>
-        <Text tg="text-lg" numberOfLines={nol.title} style={styles.title}>
-          {product.title}
+      <Text tg="text-lg" numberOfLines={nol.title} style={styles.title}>
+        {product.title}
+      </Text>
+      {price.isDiscount ? (
+        <Text tg="text-md">
+          Price:&nbsp;
+          <Text
+            tg="text-sm"
+            style={global.lineThrough}
+            c="gray"
+            cs={5}
+            fw={600}>
+            {price.initial}$
+          </Text>
+          <Text tg="text-md" c="red" fw={600}>
+            &nbsp;&nbsp;{price.fixed}$
+          </Text>
         </Text>
-        {price.isDiscount ? (
-          <Text tg="text-md">
-            Price:&nbsp;
-            <Text
-              tg="text-sm"
-              style={global.lineThrough}
-              c="gray"
-              cs={5}
-              fw={600}>
-              {price.initial}$
-            </Text>
-            <Text tg="text-md" c="red" fw={600}>
-              &nbsp;&nbsp;{price.fixed}$
-            </Text>
-          </Text>
-        ) : (
-          <Text tg="text-md" fw={600}>
-            Price: {price.initial}$
-          </Text>
-        )}
-      </View>
+      ) : (
+        <Text tg="text-md" fw={600}>
+          Price: {price.initial}$
+        </Text>
+      )}
       <Text tg="text-xs" numberOfLines={nol.description}>
         {product.description}
       </Text>
@@ -181,7 +179,8 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    marginRight: spacing[4],
+    marginTop: spacing[2],
+    marginBottom: spacing[1],
   },
   buttons: {
     marginTop: spacing[4],
