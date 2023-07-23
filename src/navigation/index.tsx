@@ -8,6 +8,7 @@ import TabsNavigation from './tabs';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
 import SearchScreen from '../screens/home/SearchScreen';
+import HeaderActions from '../components/HeaderActions';
 
 const RootStack = createNativeStackNavigator();
 
@@ -37,7 +38,10 @@ const Navigation: FC = () => {
         />
         <RootStack.Screen
           name={SCREENS.Product}
-          options={{ title: 'Product Details' }}
+          options={{
+            title: 'Product Details',
+            headerRight: () => <HeaderActions />,
+          }}
           component={ProductScreen}
         />
         <RootStack.Screen

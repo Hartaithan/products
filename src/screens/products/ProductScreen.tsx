@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import global from '../../styles/global';
 import {
   IProductScreenParams,
@@ -8,12 +8,22 @@ import {
 import { LoadingStatus } from '../../models/AppModel';
 import API from '../../helpers/api';
 import { IProduct } from '../../models/ProductModel';
-import { ProductContent, ProductLoader } from '../../components/Product';
+import {
+  ProductContent,
+  ProductHeader,
+  ProductLoader,
+} from '../../components/Product';
+import { Button } from '@rneui/base';
+import { useDispatch } from 'react-redux';
+import { addCartItem } from '../../store/cartSlice';
+import { spacing } from '../../styles/spacing';
+import Text from '../../components/Text';
 
 const ProductScreen: FC<IScreenProps> = props => {
   const { route } = props;
   const params = route.params as IProductScreenParams;
 
+  const dispatch = useDispatch();
   const [product, setProduct] = useState<IProduct | null>(null);
   const [status, setStatus] = useState<LoadingStatus>('loading');
   const isLoading = status === 'loading';
@@ -39,13 +49,45 @@ const ProductScreen: FC<IScreenProps> = props => {
     <ScrollView style={global.fill} contentContainerStyle={global.container}>
       {isLoading && <ProductLoader product="loader" />}
       {!isLoading && product !== null && (
-        <ProductContent
-          product={product}
-          nol={{ title: undefined, description: undefined }}
-        />
+        <>
+          <ProductHeader
+            product={product}
+            nol={{ title: undefined, description: undefined }}
+          />
+          <ProductContent
+            product={product}
+            nol={{ title: undefined, description: undefined }}
+          />
+          <View
+            style={{
+              ...global.row,
+              ...global.spaceBetween,
+              marginTop: spacing[2],
+            }}>
+            <Text tg="text-sm">Brand:</Text>
+            <Text tg="text-sm" fw={600}>
+              {product.brand}
+            </Text>
+          </View>
+          <View style={global.fill} />
+          <Button
+            title="Add to cart"
+            buttonStyle={styles.cart}
+            onPress={() =>
+              dispatch(addCartItem({ item: product, quantity: 1 }))
+            }
+          />
+        </>
       )}
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  cart: {
+    marginTop: spacing[5],
+    borderRadius: spacing[3],
+  },
+});
 
 export default ProductScreen;

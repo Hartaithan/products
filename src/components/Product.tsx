@@ -23,6 +23,23 @@ interface IProductsProps {
   nol?: INumberOfLines;
 }
 
+const ProductHeader: FC<IProductsProps> = props => {
+  const { product } = props;
+
+  if (product === 'loader') return null;
+
+  return (
+    <View style={{ ...styles.row, marginBottom: spacing[2] }}>
+      <Text tg="text-md" numberOfLines={1} style={styles.chip}>
+        #{product.id}
+      </Text>
+      <Text tg="text-md" style={styles.chip}>
+        {product.category}
+      </Text>
+    </View>
+  );
+};
+
 const ProductContent: FC<IProductsProps> = props => {
   const { product, nol = { title: 1, description: 3 } } = props;
 
@@ -85,6 +102,7 @@ const Product: FC<IProductsProps> = props => {
 
   return (
     <View style={styles.container}>
+      <ProductHeader {...props} />
       <ProductContent {...props} />
       <View style={styles.buttons}>
         <View style={styles.actions}>
@@ -183,5 +201,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export { ProductContent, ProductLoader };
+export { ProductHeader, ProductContent, ProductLoader };
 export default Product;
