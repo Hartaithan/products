@@ -36,8 +36,16 @@ const Product: FC<IProductsProps> = props => {
 
   return (
     <View style={styles.container}>
+      <View style={{ ...styles.row, marginBottom: spacing[2] }}>
+        <Text tg="text-md" numberOfLines={1} style={styles.chip}>
+          #{product.id}
+        </Text>
+        <Text tg="text-md" style={styles.chip}>
+          {product.category}
+        </Text>
+      </View>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
-      <View style={styles.content}>
+      <View style={{ ...styles.row, marginTop: spacing[2] }}>
         <Text tg="text-lg" numberOfLines={1} style={styles.title}>
           {product.title}
         </Text>
@@ -89,11 +97,10 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: spacing[3],
   },
-  content: {
+  row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: spacing[2],
   },
   title: {
     flex: 1,
@@ -126,6 +133,15 @@ const styles = StyleSheet.create({
   cart: {
     width: '100%',
     borderRadius: spacing[3],
+  },
+  chip: {
+    color: colors.blue[9],
+    backgroundColor: colors.blue[2],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
+    borderRadius: spacing[3],
+    fontSize: 12,
+    marginBottom: spacing[2],
   },
 });
 
