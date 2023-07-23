@@ -13,6 +13,8 @@ const HeaderActions: FC = () => {
     useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { items } = useTypedSelector(state => state.cart);
 
+  const total = items.reduce((prev, curr) => prev + curr.quantity, 0);
+
   return (
     <View style={styles.container}>
       <Button type="clear" onPress={() => navigate(SCREENS.Search)}>
@@ -23,11 +25,7 @@ const HeaderActions: FC = () => {
         buttonStyle={styles.cart}
         onPress={() => navigate(SCREENS.Cart)}>
         {items.length > 0 && (
-          <Badge
-            value={items.length}
-            status="primary"
-            containerStyle={styles.badge}
-          />
+          <Badge value={total} status="primary" containerStyle={styles.badge} />
         )}
         <Icon name="shopping-cart" type="material" />
       </Button>
