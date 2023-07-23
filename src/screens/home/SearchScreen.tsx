@@ -10,6 +10,7 @@ import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { Icon, Input } from '@rneui/themed';
 import Separator from '../../components/Separator';
 import Text from '../../components/Text';
+import global from '../../styles/global';
 
 const loaders: number[] = Array.from(Array(4).keys());
 
@@ -42,7 +43,7 @@ const SearchScreen: FC<IScreenProps> = () => {
   }, [getProducts]);
 
   return (
-    <View>
+    <View style={global.fill}>
       <View style={styles.search}>
         <Input
           placeholder="Search..."

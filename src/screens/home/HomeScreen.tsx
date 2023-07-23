@@ -10,6 +10,7 @@ import { ICategory } from '../../models/CategoryModel';
 import CategoryTabs from '../../components/CategoryTabs';
 import Separator from '../../components/Separator';
 import Text from '../../components/Text';
+import global from '../../styles/global';
 
 const loaders: number[] = Array.from(Array(4).keys());
 
@@ -69,7 +70,7 @@ const HomeScreen: FC<IScreenProps> = () => {
   }, [getCategories]);
 
   return (
-    <View>
+    <View style={global.fill}>
       <CategoryTabs
         active={category}
         categories={categories}

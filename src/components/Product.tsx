@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, memo } from 'react';
 import { Image, StyleSheet, TextProps, View } from 'react-native';
 import { IProduct } from '../models/ProductModel';
 import { Button, Skeleton } from '@rneui/themed';
@@ -223,4 +223,4 @@ const styles = StyleSheet.create({
 });
 
 export { ProductHeader, ProductContent, ProductLoader };
-export default Product;
+export default memo(Product);
