@@ -26,3 +26,7 @@ export interface IScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase>;
 }
+
+export interface IProductScreenParams {
+  productId: number;
+}

@@ -7,6 +7,9 @@ import { colors } from '../styles/colors';
 import Text from './Text';
 import { useDispatch } from 'react-redux';
 import { addCartItem } from '../store/cartSlice';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { IProductScreenParams, SCREENS } from '../models/NavigationModel';
 
 type QuantityType = 'add' | 'remove';
 
@@ -40,7 +43,15 @@ const ProductContent: FC<IProductsProps> = props => {
 const Product: FC<IProductsProps> = props => {
   const { product } = props;
   const dispatch = useDispatch();
+  const { navigate } =
+    useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [quantity, setQuantity] = useState<number>(1);
+
+  const navigateToProductDetails = () => {
+    if (product === 'loader') return;
+    const params: IProductScreenParams = { productId: product.id };
+    navigate(SCREENS.Product, params);
+  };
 
   const handleQuantity = (type: QuantityType) => {
     setQuantity(prev => {
@@ -87,7 +98,11 @@ const Product: FC<IProductsProps> = props => {
           onPress={() => dispatch(addCartItem({ item: product, quantity }))}
         />
       </View>
-      <Button title="Details" buttonStyle={styles.details} />
+      <Button
+        title="Details"
+        buttonStyle={styles.details}
+        onPress={() => navigateToProductDetails()}
+      />
     </View>
   );
 };
