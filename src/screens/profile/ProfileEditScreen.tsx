@@ -181,7 +181,7 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
         isVisible={uploadDialog}
         overlayStyle={styles.dialog}
         onBackdropPress={() => setUploadDialog(false)}>
-        <Dialog.Title title="Upload" />
+        <Dialog.Title title="Upload" titleStyle={styles.dialogTitle} />
         <Dialog.Actions>
           <Dialog.Button title="Library" onPress={() => handleLibrary()} />
           <Dialog.Button title="Camera" onPress={() => handleCamera()} />
@@ -191,7 +191,10 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
         isVisible={deleteDialog}
         overlayStyle={styles.dialog}
         onBackdropPress={() => setDeleteDialog(false)}>
-        <Dialog.Title title="Delete your profile?" />
+        <Dialog.Title
+          title="Delete your profile?"
+          titleStyle={styles.dialogTitle}
+        />
         <Dialog.Actions>
           <Dialog.Button title="Yes" onPress={() => handleDeleteProfile()} />
           <Dialog.Button
@@ -229,6 +232,9 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     gap: spacing[4],
+  },
+  dialogTitle: {
+    color: colors.dark[9],
   },
 });
 
