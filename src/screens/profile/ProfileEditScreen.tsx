@@ -5,7 +5,7 @@ import { IScreenProps } from '../../models/NavigationModel';
 import { Controller, useForm } from 'react-hook-form';
 import { TProfilePayload } from '../../models/AuthModel';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/useStore';
-import { updateProfile } from '../../store/authSlice';
+import { deleteProfile, updateProfile } from '../../store/authSlice';
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 import { Avatar, Button, Dialog, Icon, Input } from '@rneui/base';
@@ -13,6 +13,7 @@ import ImageCropPicker, {
   PickerErrorCode,
 } from 'react-native-image-crop-picker';
 import { getAvatarSource } from '../../helpers/upload';
+import { spacing } from '../../styles/spacing';
 
 const AVATAR_SIZE = 150;
 
@@ -26,7 +27,8 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
   const { isLoading, profile } = useTypedSelector(state => state.auth);
   const dispatch = useTypedDispatch();
 
-  const [dialog, setDialog] = useState<boolean>(false);
+  const [uploadDialog, setUploadDialog] = useState<boolean>(false);
+  const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
 
   const {
     control,
@@ -55,6 +57,18 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
       });
   });
 
+  const handleDeleteProfile = () => {
+    setDeleteDialog(false);
+    dispatch(deleteProfile())
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch(error => {
+        Alert.alert('Something went wrong', error);
+      });
+  };
+
   const onPickerError = (error: ICropPickerError) => {
     if (error.code === 'E_PICKER_CANCELLED') {
       console.info('user cancelled crop picker');
@@ -77,7 +91,7 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
         onPickerError(error);
       })
       .finally(() => {
-        setDialog(false);
+        setUploadDialog(false);
       });
   };
 
@@ -94,13 +108,15 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
         onPickerError(error);
       })
       .finally(() => {
-        setDialog(false);
+        setUploadDialog(false);
       });
   };
 
   return (
     <View style={[global.container, global.fillCenter]}>
-      <TouchableOpacity style={styles.avatar} onPress={() => setDialog(true)}>
+      <TouchableOpacity
+        style={styles.avatar}
+        onPress={() => setUploadDialog(true)}>
         <Avatar
           rounded
           size={AVATAR_SIZE}
@@ -148,20 +164,40 @@ const ProfileEditScreen: FC<IScreenProps> = props => {
           />
         )}
       />
-      <Button
-        title="Submit"
-        disabled={!isValid}
-        loading={isLoading}
-        onPress={() => onSubmit()}
-      />
+      <View style={styles.buttons}>
+        <Button
+          title="Submit"
+          disabled={!isValid}
+          loading={isLoading}
+          onPress={() => onSubmit()}
+        />
+        <Button
+          title="Delete profile"
+          color={colors.red[9]}
+          onPress={() => setDeleteDialog(true)}
+        />
+      </View>
       <Dialog
-        isVisible={dialog}
+        isVisible={uploadDialog}
         overlayStyle={styles.dialog}
-        onBackdropPress={() => setDialog(false)}>
+        onBackdropPress={() => setUploadDialog(false)}>
         <Dialog.Title title="Upload" />
         <Dialog.Actions>
           <Dialog.Button title="Library" onPress={() => handleLibrary()} />
           <Dialog.Button title="Camera" onPress={() => handleCamera()} />
+        </Dialog.Actions>
+      </Dialog>
+      <Dialog
+        isVisible={deleteDialog}
+        overlayStyle={styles.dialog}
+        onBackdropPress={() => setDeleteDialog(false)}>
+        <Dialog.Title title="Delete your profile?" />
+        <Dialog.Actions>
+          <Dialog.Button title="Yes" onPress={() => handleDeleteProfile()} />
+          <Dialog.Button
+            title="Cancel"
+            onPress={() => setDeleteDialog(false)}
+          />
         </Dialog.Actions>
       </Dialog>
     </View>
@@ -189,6 +225,10 @@ const styles = StyleSheet.create({
   },
   dialog: {
     backgroundColor: 'white',
+  },
+  buttons: {
+    flexDirection: 'row',
+    gap: spacing[4],
   },
 });
 

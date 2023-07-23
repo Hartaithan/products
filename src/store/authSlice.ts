@@ -100,6 +100,27 @@ const updateProfile = createTypedAsyncThunk(
   },
 );
 
+const deleteProfile = createTypedAsyncThunk(
+  'auth/deleteProfile',
+  async (_, { getState, rejectWithValue }) => {
+    const { auth } = getState();
+    if (!auth.user) return rejectWithValue('User not found!');
+    const avatar_url = auth.profile?.avatar_url || null;
+    if (avatar_url && typeof avatar_url === 'string') {
+      const publicUrl = avatar_url.split('/').pop() || 'image.png';
+      const { error: buckerError } = await supabase.storage
+        .from('avatars')
+        .remove([publicUrl]);
+      if (buckerError) return rejectWithValue(buckerError.message);
+    }
+    const { error: deleteError } = await supabase.rpc('delete_user');
+    if (deleteError) return rejectWithValue(deleteError.message);
+    const { error: signOurError } = await supabase.auth.signOut();
+    if (signOurError) return rejectWithValue(signOurError.message);
+    return { user: null, profile: null };
+  },
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -158,10 +179,18 @@ export const authSlice = createSlice({
       state.profile = action.payload.profile;
     });
     builder.addCase(updateProfile.rejected, state => state);
+    // DELETE PROFILE
+    builder.addCase(deleteProfile.pending, state => {
+      state.isLoading = true;
+    });
+    builder.addCase(deleteProfile.fulfilled, () => initialState);
+    builder.addCase(deleteProfile.rejected, state => {
+      state.isLoading = false;
+    });
   },
 });
 
 export const { updateSession } = authSlice.actions;
-export { signIn, signUp, signOut, getProfile, updateProfile };
+export { signIn, signUp, signOut, getProfile, updateProfile, deleteProfile };
 
 export default authSlice.reducer;
