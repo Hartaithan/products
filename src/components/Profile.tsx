@@ -15,7 +15,7 @@ import { getAvatarSource } from '../helpers/upload';
 const Profile: FC = () => {
   const { navigate } =
     useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const { isAuth, profile } = useTypedSelector(state => state.auth);
+  const { isAuth, isLoading, profile } = useTypedSelector(state => state.auth);
   const dispatch = useTypedDispatch();
 
   const handleSignOut = () => {
@@ -28,15 +28,22 @@ const Profile: FC = () => {
 
   return (
     <View style={global.fillCenter}>
-      {isAuth && (
+      {isLoading && (
+        <>
+          <Avatar rounded size={150} source={getAvatarSource(undefined)} />
+          <Text tg="text-xl" style={styles.name}>
+            Loading...
+          </Text>
+        </>
+      )}
+      {!isLoading && isAuth && (
         <>
           <Avatar
             rounded
             size={150}
-            avatarStyle={styles.avatar}
             source={getAvatarSource(profile?.avatar_url)}
           />
-          <Text tg="text-xl">{`${profile?.name || 'Name'} ${
+          <Text tg="text-xl" style={styles.name}>{`${profile?.name || 'Name'} ${
             profile?.surname || 'Surname'
           }`}</Text>
           <View style={styles.buttons}>
@@ -48,7 +55,7 @@ const Profile: FC = () => {
           </View>
         </>
       )}
-      {!isAuth && (
+      {!isLoading && !isAuth && (
         <>
           <Text tg="text-xl">Don&apos;t have an account? Sign in!</Text>
           <Button
@@ -63,8 +70,8 @@ const Profile: FC = () => {
 };
 
 const styles = StyleSheet.create({
-  avatar: {
-    marginBottom: spacing[4],
+  name: {
+    marginTop: spacing[4],
   },
   buttons: {
     flexDirection: 'row',
