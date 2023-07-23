@@ -23,9 +23,14 @@ const CartItem: FC<ICartItemProps> = props => {
   return (
     <View style={styles.container}>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
-      <Text tg="text-sm" style={styles.title} numberOfLines={2}>
-        {product.title}
-      </Text>
+      <View style={styles.title}>
+        <Text tg="text-sm" numberOfLines={2}>
+          {product.title}
+        </Text>
+        <Text tg="text-sm" fw={600} numberOfLines={2}>
+          {product.price} $
+        </Text>
+      </View>
       <View style={styles.actions}>
         <Button
           title="-"
