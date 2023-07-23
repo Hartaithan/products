@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import global from '../../styles/global';
 import {
   IProductScreenParams,
@@ -46,7 +46,7 @@ const ProductScreen: FC<IScreenProps> = props => {
   }, [getProduct]);
 
   return (
-    <ScrollView style={global.fill} contentContainerStyle={global.container}>
+    <ScrollView style={global.fill} contentContainerStyle={global.spacing}>
       {isLoading && <ProductLoader product="loader" />}
       {!isLoading && product !== null && (
         <>
@@ -69,7 +69,6 @@ const ProductScreen: FC<IScreenProps> = props => {
               {product.brand}
             </Text>
           </View>
-          <View style={global.fill} />
           <Button
             title="Add to cart"
             buttonStyle={styles.cart}
@@ -77,6 +76,14 @@ const ProductScreen: FC<IScreenProps> = props => {
               dispatch(addCartItem({ item: product, quantity: 1 }))
             }
           />
+          <View style={styles.gallery}>
+            <Text tg="text-lg" fw={600}>
+              Gallery:
+            </Text>
+            {product.images.map(image => (
+              <Image key={image} style={styles.image} source={{ uri: image }} />
+            ))}
+          </View>
         </>
       )}
     </ScrollView>
@@ -87,6 +94,15 @@ const styles = StyleSheet.create({
   cart: {
     marginTop: spacing[5],
     borderRadius: spacing[3],
+  },
+  gallery: {
+    marginTop: spacing[5],
+    gap: spacing[5],
+  },
+  image: {
+    height: 200,
+    width: '100%',
+    borderRadius: spacing[5],
   },
 });
 
