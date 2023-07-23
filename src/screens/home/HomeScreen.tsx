@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
   tabs: {
     flexDirection: 'row',
   },
-  tab: {},
 });
 
 export default HomeScreen;

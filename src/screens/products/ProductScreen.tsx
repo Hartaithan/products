@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import global from '../../styles/global';
 import {
   IProductScreenParams,
@@ -8,7 +8,7 @@ import {
 import { LoadingStatus } from '../../models/AppModel';
 import API from '../../helpers/api';
 import { IProduct } from '../../models/ProductModel';
-import Text from '../../components/Text';
+import { ProductContent, ProductLoader } from '../../components/Product';
 
 const ProductScreen: FC<IScreenProps> = props => {
   const { route } = props;
@@ -36,12 +36,15 @@ const ProductScreen: FC<IScreenProps> = props => {
   }, [getProduct]);
 
   return (
-    <View style={global.container}>
-      <Text tg="text-xs">ProductScreen</Text>
-      <Text tg="text-xs">{JSON.stringify(isLoading, null, 2)}</Text>
-      <Text tg="text-xs">{JSON.stringify(params, null, 2)}</Text>
-      <Text tg="text-xs">{JSON.stringify(product, null, 2)}</Text>
-    </View>
+    <ScrollView style={global.fill} contentContainerStyle={global.container}>
+      {isLoading && <ProductLoader product="loader" />}
+      {!isLoading && product !== null && (
+        <ProductContent
+          product={product}
+          nol={{ title: undefined, description: undefined }}
+        />
+      )}
+    </ScrollView>
   );
 };
 

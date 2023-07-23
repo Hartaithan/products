@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, TextProps, View } from 'react-native';
 import { IProduct } from '../models/ProductModel';
 import { Button, Skeleton } from '@rneui/themed';
 import { spacing } from '../styles/spacing';
@@ -13,12 +13,18 @@ import { IProductScreenParams, SCREENS } from '../models/NavigationModel';
 
 type QuantityType = 'add' | 'remove';
 
+interface INumberOfLines {
+  title: TextProps['numberOfLines'];
+  description: TextProps['numberOfLines'];
+}
+
 interface IProductsProps {
   product: IProduct | 'loader';
+  nol?: INumberOfLines;
 }
 
 const ProductContent: FC<IProductsProps> = props => {
-  const { product } = props;
+  const { product, nol = { title: 1, description: 3 } } = props;
 
   if (product === 'loader') return null;
 
@@ -26,18 +32,24 @@ const ProductContent: FC<IProductsProps> = props => {
     <>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
       <View style={{ ...styles.row, marginTop: spacing[2] }}>
-        <Text tg="text-lg" numberOfLines={1} style={styles.title}>
+        <Text tg="text-lg" numberOfLines={nol.title} style={styles.title}>
           {product.title}
         </Text>
         <Text tg="text-md" fw={600}>
           Price: {product.price}$
         </Text>
       </View>
-      <Text tg="text-xs" numberOfLines={3}>
+      <Text tg="text-xs" numberOfLines={nol.description}>
         {product.description}
       </Text>
     </>
   );
+};
+
+const ProductLoader: FC<IProductsProps> = props => {
+  const { product } = props;
+  if (product !== 'loader') return null;
+  return <Skeleton style={styles.loader} height={200} />;
 };
 
 const Product: FC<IProductsProps> = props => {
@@ -68,7 +80,7 @@ const Product: FC<IProductsProps> = props => {
   };
 
   if (product === 'loader') {
-    return <Skeleton style={styles.loader} height={200} />;
+    return <ProductLoader {...props} />;
   }
 
   return (
@@ -171,5 +183,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export { ProductContent };
+export { ProductContent, ProductLoader };
 export default Product;
