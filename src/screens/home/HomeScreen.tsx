@@ -1,11 +1,14 @@
 import { FC, useEffect, useState, useCallback } from 'react';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import global from '../../styles/global';
 import { IScreenProps } from '../../models/NavigationModel';
-import Text from '../../components/Text';
 import API from '../../helpers/api';
 import { IProduct } from '../../models/ProductModel';
 import { LoadingStatus } from '../../models/AppModel';
+import Product from '../../components/Product';
+import { spacing } from '../../styles/spacing';
+
+const loaders: number[] = Array.from(Array(4).keys());
 
 const HomeScreen: FC<IScreenProps> = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -35,18 +38,28 @@ const HomeScreen: FC<IScreenProps> = () => {
 
   return (
     <View style={global.fill}>
-      <FlatList
-        data={products}
+      <FlatList<IProduct | number>
+        data={isLoading ? loaders : products}
         contentContainerStyle={global.spacing}
         renderItem={({ item }) => (
-          <Text tg="text-xs">{JSON.stringify(item, null, 2)}</Text>
+          <Product product={typeof item === 'number' ? 'loader' : item} />
         )}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        keyExtractor={item =>
+          typeof item === 'number' ? item.toString() : item.id.toString()
         }
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  separator: {
+    height: spacing[5],
+  },
+});
 
 export default HomeScreen;
