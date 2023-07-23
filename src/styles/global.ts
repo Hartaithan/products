@@ -26,6 +26,9 @@ const global = StyleSheet.create({
   spaceBetween: {
     justifyContent: 'space-between',
   },
+  lineThrough: {
+    textDecorationLine: 'line-through',
+  },
 });
 
 export default global;

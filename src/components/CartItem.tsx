@@ -11,6 +11,8 @@ import {
   incrementQuantity,
   removeCartItem,
 } from '../store/cartSlice';
+import { getPrice } from '../helpers/price';
+import global from '../styles/global';
 
 interface ICartItemProps {
   item: ICartItem;
@@ -20,6 +22,8 @@ const CartItem: FC<ICartItemProps> = props => {
   const { item: product, quantity } = props.item;
   const dispatch = useTypedDispatch();
 
+  const price = getPrice(product);
+
   return (
     <View style={styles.container}>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
@@ -27,9 +31,26 @@ const CartItem: FC<ICartItemProps> = props => {
         <Text tg="text-sm" numberOfLines={2}>
           {product.title}
         </Text>
-        <Text tg="text-sm" fw={600} numberOfLines={2}>
-          {product.price} $
-        </Text>
+        {price.isDiscount ? (
+          <>
+            <Text
+              tg="text-xs"
+              style={global.lineThrough}
+              c="gray"
+              cs={5}
+              fw={600}
+              numberOfLines={2}>
+              {price.initial} $
+            </Text>
+            <Text tg="text-sm" c="red" fw={600} numberOfLines={2}>
+              {price.fixed} $
+            </Text>
+          </>
+        ) : (
+          <Text tg="text-sm" fw={600} numberOfLines={2}>
+            {price.initial} $
+          </Text>
+        )}
       </View>
       <View style={styles.actions}>
         <Button

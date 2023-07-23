@@ -7,15 +7,19 @@ import { spacing } from '../../styles/spacing';
 import Separator from '../../components/Separator';
 import global from '../../styles/global';
 import Text from '../../components/Text';
+import { getPrice } from '../../helpers/price';
 
 const CartScreen: FC<IScreenProps> = () => {
   const { items } = useTypedSelector(state => state.cart);
 
   const total = items.reduce(
-    (prev, curr) => ({
-      price: prev.price + curr.item.price * curr.quantity,
-      count: prev.count + curr.quantity,
-    }),
+    (prev, curr) => {
+      const price = getPrice(curr.item);
+      return {
+        price: prev.price + price.value * curr.quantity,
+        count: prev.count + curr.quantity,
+      };
+    },
     { price: 0, count: 0 },
   );
 
@@ -32,7 +36,7 @@ const CartScreen: FC<IScreenProps> = () => {
         <Text tg="text-lg">
           Total price:&nbsp;
           <Text tg="text-lg" fw={600}>
-            {total.price} $
+            {total.price.toFixed(2)} $
           </Text>
         </Text>
         <Text tg="text-lg">

@@ -10,6 +10,8 @@ import { addCartItem } from '../store/cartSlice';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { IProductScreenParams, SCREENS } from '../models/NavigationModel';
+import { getPrice } from '../helpers/price';
+import global from '../styles/global';
 
 type QuantityType = 'add' | 'remove';
 
@@ -45,6 +47,8 @@ const ProductContent: FC<IProductsProps> = props => {
 
   if (product === 'loader') return null;
 
+  const price = getPrice(product);
+
   return (
     <>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
@@ -52,9 +56,26 @@ const ProductContent: FC<IProductsProps> = props => {
         <Text tg="text-lg" numberOfLines={nol.title} style={styles.title}>
           {product.title}
         </Text>
-        <Text tg="text-md" fw={600}>
-          Price: {product.price}$
-        </Text>
+        {price.isDiscount ? (
+          <Text tg="text-md">
+            Price:&nbsp;
+            <Text
+              tg="text-sm"
+              style={global.lineThrough}
+              c="gray"
+              cs={5}
+              fw={600}>
+              {price.initial}$
+            </Text>
+            <Text tg="text-md" c="red" fw={600}>
+              &nbsp;&nbsp;{price.fixed}$
+            </Text>
+          </Text>
+        ) : (
+          <Text tg="text-md" fw={600}>
+            Price: {price.initial}$
+          </Text>
+        )}
       </View>
       <Text tg="text-xs" numberOfLines={nol.description}>
         {product.description}
