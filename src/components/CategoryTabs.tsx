@@ -1,9 +1,10 @@
 import { FC } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ICategory } from '../models/CategoryModel';
 import Text from './Text';
 import { colors } from '../styles/colors';
 import { spacing } from '../styles/spacing';
+import Separator from './Separator';
 
 interface ICategoryTabsProps {
   active: ICategory;
@@ -38,7 +39,7 @@ const CategoryTabs: FC<ICategoryTabsProps> = props => {
           </TouchableOpacity>
         );
       }}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ItemSeparatorComponent={() => <Separator w={spacing[4]} />}
     />
   );
 };
@@ -56,9 +57,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[1],
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  separator: {
-    width: spacing[4],
   },
 });
 

@@ -1,9 +1,10 @@
 import { FC } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { IScreenProps } from '../../models/NavigationModel';
 import { useTypedSelector } from '../../hooks/useStore';
 import CartItem from '../../components/CartItem';
 import { spacing } from '../../styles/spacing';
+import Separator from '../../components/Separator';
 
 const CartScreen: FC<IScreenProps> = () => {
   const { items } = useTypedSelector(state => state.cart);
@@ -13,7 +14,7 @@ const CartScreen: FC<IScreenProps> = () => {
       data={items}
       contentContainerStyle={styles.container}
       renderItem={({ item }) => <CartItem item={item} />}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ItemSeparatorComponent={() => <Separator />}
       keyExtractor={({ item }) => item.id.toString()}
     />
   );
@@ -22,9 +23,6 @@ const CartScreen: FC<IScreenProps> = () => {
 const styles = StyleSheet.create({
   container: {
     padding: spacing[5],
-  },
-  separator: {
-    height: spacing[5],
   },
 });
 

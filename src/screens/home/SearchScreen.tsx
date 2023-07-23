@@ -9,6 +9,7 @@ import Product from '../../components/Product';
 import { spacing } from '../../styles/spacing';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { Icon, Input } from '@rneui/themed';
+import Separator from '../../components/Separator';
 
 const loaders: number[] = Array.from(Array(4).keys());
 
@@ -58,7 +59,7 @@ const SearchScreen: FC<IScreenProps> = () => {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
         }
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <Separator />}
         keyExtractor={item =>
           typeof item === 'number' ? item.toString() : item.id.toString()
         }
@@ -71,9 +72,6 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing[5],
     paddingTop: 0,
-  },
-  separator: {
-    height: spacing[5],
   },
   search: {
     paddingTop: spacing[4],
