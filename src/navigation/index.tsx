@@ -7,6 +7,7 @@ import CartScreen from '../screens/products/CartScreen';
 import TabsNavigation from './tabs';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
+import SearchScreen from '../screens/home/SearchScreen';
 
 const RootStack = createNativeStackNavigator();
 
@@ -19,10 +20,31 @@ const Navigation: FC = () => {
           options={{ headerShown: false }}
           component={TabsNavigation}
         />
-        <RootStack.Screen name={SCREENS.SignIn} component={SignInScreen} />
-        <RootStack.Screen name={SCREENS.SignUp} component={SignUpScreen} />
-        <RootStack.Screen name={SCREENS.Product} component={ProductScreen} />
-        <RootStack.Screen name={SCREENS.Cart} component={CartScreen} />
+        <RootStack.Screen
+          name={SCREENS.Search}
+          options={{ title: 'Search' }}
+          component={SearchScreen}
+        />
+        <RootStack.Screen
+          name={SCREENS.SignIn}
+          options={{ title: 'Sign In' }}
+          component={SignInScreen}
+        />
+        <RootStack.Screen
+          name={SCREENS.SignUp}
+          options={{ title: 'Sign Up' }}
+          component={SignUpScreen}
+        />
+        <RootStack.Screen
+          name={SCREENS.Product}
+          options={{ title: 'Product Details' }}
+          component={ProductScreen}
+        />
+        <RootStack.Screen
+          name={SCREENS.Cart}
+          options={{ title: 'My Cart' }}
+          component={CartScreen}
+        />
       </RootStack.Navigator>
     </NavigationContainer>
   );

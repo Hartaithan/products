@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS } from '../models/NavigationModel';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import ProfileEditScreen from '../screens/profile/ProfileEditScreen';
+import SearchAction from '../components/SearchAction';
 
 const ProfileStack = createNativeStackNavigator();
 
@@ -11,7 +12,7 @@ const ProfileNavigation: FC = () => {
     <ProfileStack.Navigator initialRouteName={SCREENS.Profile}>
       <ProfileStack.Screen
         name={SCREENS.Profile}
-        options={{ title: 'Profile' }}
+        options={{ title: 'Profile', headerRight: () => <SearchAction /> }}
         component={ProfileScreen}
       />
       <ProfileStack.Screen

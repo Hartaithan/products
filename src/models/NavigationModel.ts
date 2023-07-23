@@ -5,6 +5,7 @@ export enum SCREENS {
   Root = 'RootScreen',
   // HOME
   Home = 'HomeScreen',
+  Search = 'SearchScreen',
   // AUTH
   SignIn = 'SignInScreen',
   SignUp = 'SignUpScreen',
