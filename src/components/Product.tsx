@@ -6,6 +6,8 @@ import { spacing } from '../styles/spacing';
 import { colors } from '../styles/colors';
 import Text from './Text';
 
+type QuantityType = 'add' | 'remove';
+
 interface IProductsProps {
   product: IProduct | 'loader';
 }
@@ -14,6 +16,20 @@ const Product: FC<IProductsProps> = props => {
   const { product } = props;
   const [quantity, setQuantity] = useState<number>(1);
 
+  const handleQuantity = (type: QuantityType) => {
+    setQuantity(prev => {
+      switch (type) {
+        case 'add':
+          return prev + 1;
+        case 'remove':
+          if (prev === 0) return prev;
+          return prev - 1;
+        default:
+          return prev;
+      }
+    });
+  };
+
   if (product === 'loader') {
     return <Skeleton style={styles.loader} height={200} />;
   }
@@ -21,8 +37,8 @@ const Product: FC<IProductsProps> = props => {
   return (
     <View style={styles.container}>
       <Image style={styles.thumbnail} source={{ uri: product.thumbnail }} />
-      <View style={styles.title}>
-        <Text tg="text-lg" numberOfLines={1}>
+      <View style={styles.content}>
+        <Text tg="text-lg" numberOfLines={1} style={styles.title}>
           {product.title}
         </Text>
         <Text tg="text-md" fw={600}>
@@ -37,7 +53,7 @@ const Product: FC<IProductsProps> = props => {
           <Button
             title="-"
             activeOpacity={0}
-            onPress={() => setQuantity(prev => prev - 1)}
+            onPress={() => handleQuantity('remove')}
             buttonStyle={styles.multiplier}
           />
           <Text tg="text-lg" style={styles.quantity}>
@@ -46,7 +62,7 @@ const Product: FC<IProductsProps> = props => {
           <Button
             title="+"
             activeOpacity={0}
-            onPress={() => setQuantity(prev => prev + 1)}
+            onPress={() => handleQuantity('add')}
             buttonStyle={styles.multiplier}
           />
         </View>
@@ -73,11 +89,15 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: spacing[3],
   },
-  title: {
+  content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: spacing[2],
+  },
+  title: {
+    flex: 1,
+    marginRight: spacing[4],
   },
   buttons: {
     marginTop: spacing[4],
