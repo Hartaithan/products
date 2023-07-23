@@ -11,6 +11,7 @@ import { getPrice } from '../../helpers/price';
 
 const CartScreen: FC<IScreenProps> = () => {
   const { items } = useTypedSelector(state => state.cart);
+  const { isAuth } = useTypedSelector(state => state.auth);
 
   const total = items.reduce(
     (prev, curr) => {
@@ -32,6 +33,11 @@ const CartScreen: FC<IScreenProps> = () => {
         ItemSeparatorComponent={() => <Separator />}
         keyExtractor={({ item }) => item.id.toString()}
       />
+      {!isAuth && (
+        <Text tg="text-lg" c="red" cs={6} style={styles.unauth}>
+          You need to be authorized to place an order.
+        </Text>
+      )}
       <View style={styles.total}>
         <Text tg="text-lg">
           Total price:&nbsp;
@@ -55,6 +61,10 @@ const styles = StyleSheet.create({
     padding: spacing[5],
   },
   total: {
+    padding: spacing[5],
+  },
+  unauth: {
+    textAlign: 'center',
     padding: spacing[5],
   },
 });
