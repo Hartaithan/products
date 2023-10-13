@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.gray[2],
     borderRadius: spacing[5],
-    padding: spacing[5],
     flexDirection: 'row',
     alignItems: 'center',
+    padding: spacing[5],
     shadowColor: colors.dark[9],
     shadowOffset: {
       width: 0,
